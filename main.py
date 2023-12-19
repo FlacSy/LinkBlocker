@@ -38,22 +38,23 @@ async def delete_message(message: types.Message):
 
         forbidden_links_set = set(forbidden_links)
         for link in forbidden_links_set:
-            if re.search(re.escape(link), message.text):
+            if link in message.text:
                 if not await is_admin(message):
                     logger.info(
-                        f"Сообщение от @{message.from_user.username} в чате {message.chat.title} содержит запрещенную ссылку: {message.text}"
+                        f"Сообщение от {message.from_user.username} ({message.from_user.id}) в чате {message.chat.title} содержит запрещенную ссылку: {message.text}"
                     )
                     await message.delete()
                     await bot.send_message(
                         message.chat.id,
-                         f"Сообщение от @{message.from_user.username} в чате {message.chat.title} содержит запрещенную ссылку: {message.text}"
+                        f"Сообщение от {message.from_user.username} ({message.from_user.id}) в чате {message.chat.title} содержит запрещенную ссылку: {link}"
                     )
                     break
 
         if {"https://t.me/sepi0lscommunity/", "https://t.me/nikitasepi0l"} in message.text:
             return
     except Exception as e:
-        logger.error(f"An error occurred while processing the message: {e}")
+        logger.error(f"Произошла ошибка при обработке сообщения: {e}")
+
 
 @dp.message_handler()
 async def echo_all(message: types.Message):
