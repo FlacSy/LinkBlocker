@@ -41,7 +41,7 @@ async def delete_message(message: types.Message):
 
         # Проверить каждую ссылку на соответствие запрещенным
         for link in links:
-            if "tiktok" in link or "t.me" in link and link not in allowed_links:
+            if "tiktok" in link or not any(link.startswith(allowed) for allowed in allowed_links):
                 if not await is_admin(message):
                     logger.info(
                         f"Сообщение от {message.from_user.username} ({message.from_user.id}) в чате {message.chat.title} содержит запрещенную ссылку: {link}"
